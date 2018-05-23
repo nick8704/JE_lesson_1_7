@@ -8,55 +8,32 @@ import java.io.IOException;
 public class Main {
 
     static final String file = "poesy.txt";
+    static int amountOfStrings = 0;
+    static int amountOfWords = 0;
+    static int amountOfSymbols = 0;
 
     public static void main(String[] args) {
-        countOfStrings(file);
-        countOfWords(file);
-        countOfSymbols(file);
+        fileCount(file);
+        System.out.printf("In file \"%s\" there are %d strings, %d words and %d symbols.", file, amountOfStrings, amountOfWords, amountOfSymbols);
     }
 
-    private static void countOfStrings(String file) {
-        int count = 0;
-        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while (reader.readLine() != null) {
-                count++;
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("ERROR! File not found!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.printf("In file \"%s\" there are %d strings.\n", file, count);
-    }
-
-    private static void countOfWords(String file) {
-        int count = 0;
+    private static void fileCount(String file) {
         String line;
-        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             while ((line = reader.readLine()) != null) {
+                amountOfStrings++;
+                amountOfSymbols += line.length();
                 String[] tmpArray = line.split(" ");
-                count += tmpArray.length;
+                for (int i = 0; i < tmpArray.length; i++) {
+                    if (tmpArray[i].matches("[a-zA-Zа-яА-Я.,;]+")) {
+                        amountOfWords++;
+                    }
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("ERROR! File not found!");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.printf("In file \"%s\" there are %d words.\n", file, count);
-    }
-
-    private static void countOfSymbols(String file) {
-        int count = 0;
-        String line;
-        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while ((line = reader.readLine()) != null) {
-                count += line.length();
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("ERROR! File not found!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.printf("In file \"%s\" there are %d symbols.\n", file, count);
     }
 }
